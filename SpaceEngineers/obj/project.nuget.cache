@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dgSpecHash": "VrOk46ZcD2xLc6HHmJaweGytFubIZJtkf55bfaqFrZlkFK1JgVtv3ACWaSz3J3ze/n/OQN1NtgT00VItMLdg2A==",
+  "success": true,
+  "projectFilePath": "D:\\workspaces\\space-engineers\\SpaceEngineers\\SpaceEngineers\\SpaceEngineers.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Kayde\\.nuget\\packages\\mal.mdk2.modanalyzers\\2.1.8\\mal.mdk2.modanalyzers.2.1.8.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\mal.mdk2.pbanalyzers\\2.1.7\\mal.mdk2.pbanalyzers.2.1.7.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\mal.mdk2.references\\2.1.9\\mal.mdk2.references.2.1.9.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.build.framework\\17.7.2\\microsoft.build.framework.17.7.2.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.build.utilities.core\\17.7.2\\microsoft.build.utilities.core.17.7.2.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.io.redist\\6.0.0\\microsoft.io.redist.6.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.net.stringtools\\17.7.2\\microsoft.net.stringtools.17.7.2.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.visualstudio.setup.configuration.interop\\3.2.2146\\microsoft.visualstudio.setup.configuration.interop.3.2.2146.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.configuration.configurationmanager\\7.0.0\\system.configuration.configurationmanager.7.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.security.accesscontrol\\6.0.0\\system.security.accesscontrol.6.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.security.permissions\\7.0.0\\system.security.permissions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

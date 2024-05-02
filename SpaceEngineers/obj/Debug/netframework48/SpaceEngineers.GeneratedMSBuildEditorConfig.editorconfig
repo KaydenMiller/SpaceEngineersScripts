@@ -1,0 +1,7 @@
+is_global = true
+build_property.ProjectDir = D:\workspaces\space-engineers\SpaceEngineers\SpaceEngineers\
+build_property.ProjectDir = D:\workspaces\space-engineers\SpaceEngineers\SpaceEngineers\
+build_property.ProjectDir = D:\workspaces\space-engineers\SpaceEngineers\SpaceEngineers\
+build_property.Mdk-IgnorePaths = **\*.debug.cs|obj\**\*
+build_property.Mdk-IgnorePaths = **\*.debug.cs|obj\**\*
+build_property.RootNamespace = IngameScript
