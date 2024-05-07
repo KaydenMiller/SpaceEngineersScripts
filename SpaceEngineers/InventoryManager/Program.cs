@@ -6,7 +6,8 @@ namespace IngameScript.InventoryManager
 {
     public class Program : MyGridProgram
     {
-        private Dictionary<string, ItemInformation> items = new Dictionary<string, ItemInformation>();
+        private Dictionary<string, ItemInformation> _ingots = new Dictionary<string, ItemInformation>();
+        private Dictionary<string, ItemInformation> _ore = new Dictionary<string, ItemInformation>();
         
         public Program()
         {
@@ -19,18 +20,52 @@ namespace IngameScript.InventoryManager
             GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(blocksWithInventory, block => block.InventoryCount > 0);
 
             Clear();
+            CountRawResources(blocksWithInventory);
             Count(blocksWithInventory);
-            Draw();
+            Draw("InventoryDisplayIngots", _ingots.Select(x => x.Value));
+            Draw("InventoryDisplayOre", _ore.Select(x => x.Value), true);
         }
 
         public void Clear()
         {
-            items.Clear();
+            _ingots.Clear();
+            _ore.Clear();
         }
 
+        public void CountRawResources(IEnumerable<IMyTerminalBlock> inventoryBlocks)
+        {
+            var itemsList = new List<MyInventoryItem>();
+            foreach (var block in inventoryBlocks)
+            {
+                var itemList = new List<MyInventoryItem>();
+                block.GetInventory(0).GetItems(itemList, item => item.Type.TypeId == "MyObjectBuilder_Ore");
+                itemsList.AddRange(itemList);
+                
+                if (block.InventoryCount <= 1) continue;
+                block.GetInventory(1).GetItems(itemList, item => item.Type.TypeId == "MyObjectBuilder_Ore");
+                itemsList.AddRange(itemList);
+            }
+            
+            foreach (var item in itemsList)
+            {
+                var info = GetItemInfo(item);
+
+                if (_ore.ContainsKey(info.ItemSubType))
+                {
+                    var value = _ore.GetValueOrDefault(info.ItemSubType);
+                    value.ItemCount += info.ItemCount;
+                }
+                else
+                {
+                    _ore.Add(info.ItemSubType, info);
+                }
+            } 
+        }
+        
         public void Count(IEnumerable<IMyTerminalBlock> inventoryBlocks)
         {
             var itemsList = new List<MyInventoryItem>();
+            
             foreach (var block in inventoryBlocks)
             {
                 var itemList = new List<MyInventoryItem>();
@@ -42,31 +77,34 @@ namespace IngameScript.InventoryManager
                 itemsList.AddRange(itemList);
             }
             
-            foreach (var item in itemsList)
+            foreach (var info in itemsList.Select(GetItemInfo).OrderBy(i => i.ItemCount))
             {
-                var info = GetItemInfo(item);
-
-                if (items.ContainsKey(info.ItemSubType))
+                if (_ingots.ContainsKey(info.ItemSubType))
                 {
-                    var value = items.GetValueOrDefault(info.ItemSubType);
+                    var value = _ingots.GetValueOrDefault(info.ItemSubType);
                     value.ItemCount += info.ItemCount;
                 }
                 else
                 {
-                    items.Add(info.ItemSubType, info);
+                    _ingots.Add(info.ItemSubType, info);
                 }
             }
         }
 
-        public void Draw()
+        
+        /// <summary>
+        /// We can only draw a max of 10 lines currently
+        /// </summary>
+        public void Draw(string displayName, IEnumerable<ItemInformation> items, bool useOreRatios = false)
         {
-            var display = GridTerminalSystem.GetBlockWithName("InventoryDisplay") as IMyTextPanel;
+            var display = GridTerminalSystem.GetBlockWithName(displayName) as IMyTextPanel;
             var builder = new StringBuilder();
-
-
-            foreach (var item in items.Values.OrderBy(i => i.ItemCount))
+            display.Font = "Monospace";
+            display.FontSize = 1f;
+            
+            foreach (var item in items.OrderBy(i => i.ItemCount))
             {
-                builder.AppendLine(item.ToString());
+                builder.AppendLine(item.ToString(useOreRatios));
             }
             display.WriteText(builder.ToString());
             display.DrawFrame();
@@ -82,7 +120,7 @@ namespace IngameScript.InventoryManager
             };
         }
 
-        private class ItemInformation
+        public class ItemInformation
         {
             public string ItemType { get; set; }
             public string ItemSubType { get; set; }
@@ -90,7 +128,57 @@ namespace IngameScript.InventoryManager
 
             public override string ToString()
             {
-                return $"{ItemSubType}: {ItemCount.ToString("N2")}";
+                return $"{ItemSubType,9}: {ConvertNumberShorthand(ItemCount),4}";
+            }
+            
+            public string ToString(bool useRatios)
+            {
+                if (useRatios)
+                {
+                    var ratio = GetOreRatio(ItemSubType);
+                    var refinedValue = ItemCount * ratio;
+                    return $"{ItemSubType,9}: {ConvertNumberShorthand(ItemCount),4} => {ConvertNumberShorthand(refinedValue),4}";
+                }
+                
+                return $"{ItemSubType,9}: {ConvertNumberShorthand(ItemCount),4}";
+            }
+        }
+        
+        private static string ConvertNumberShorthand(double num)
+        {
+            if (num >= 1000000)
+                return string.Concat(Math.Round(num / 1000000), "M");
+            if (num >= 1000)
+                return string.Concat(Math.Round(num / 1000), "K");
+            return Math.Round(num).ToString("N0");
+        }
+
+        private static float GetOreRatio(string oreType)
+        {
+            switch (oreType)
+            {
+                case "Gold":
+                    return 0.01f;
+                case "Silver":
+                    return 0.10f;
+                case "Platinum":
+                    return 0.0048f;
+                case "Cobalt":
+                    return 0.30f;
+                case "Iron":
+                    return 0.70f;
+                case "Magnesium":
+                    return 0.007f;
+                case "Nickle":
+                    return 0.40f;
+                case "Silicon":
+                    return 0.70f;
+                case "Uranium":
+                    return 0.01f;
+                case "Stone":
+                    return 0f;
+                default:
+                    return 0f;
             }
         }
     }
