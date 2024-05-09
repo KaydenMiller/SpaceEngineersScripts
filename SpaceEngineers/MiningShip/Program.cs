@@ -1,20 +1,36 @@
 ﻿using System.Text;
 using Sandbox.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame;
+using VRage.Game.ModAPI.Ingame.Utilities;
 
 namespace IngameScript.InventoryManager.MiningShip
 {
     public class Program : MyGridProgram
     {
         private Dictionary<string, ItemInformation> _ore = new Dictionary<string, ItemInformation>();
+        private string _cockpit;
+        private int _displayId;
 
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update100;
+            var ini = new MyIni();
+            ini.TryParse(Me.CustomData);
+            _cockpit = ini.Get("Output", "cockpit").ToString();
+            _displayId = ini.Get("Output", "display").ToInt32();
         }
 
         public void Main(string argument, UpdateType updateSource)
         {
+            Echo($"Looking for cockpit '{_cockpit}'");
+            Echo($"Looking for display: '{_displayId}'");
+            var cockpit = GridTerminalSystem.GetBlockWithName(_cockpit) as IMyCockpit;
+            var display = cockpit.GetSurface(_displayId) as IMyTextSurface;
+            if (display == null)
+            {
+                Echo($"Display does not exist, there are {cockpit.SurfaceCount} surfaces");
+                return;
+            }
             var blocksWithInventory = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocksOfType<IMyTerminalBlock>(blocksWithInventory,
                 block => block.InventoryCount > 0 && block.IsSameConstructAs(Me));
@@ -24,7 +40,7 @@ namespace IngameScript.InventoryManager.MiningShip
 
             Clear();
             CountRawResources(blocksWithInventory);
-            Draw("InfoDisplayPanel", _ore.Select(x => x.Value), cap, true);
+            Draw(display, _ore.Select(x => x.Value), cap, true);
         }
 
         public void Clear()
@@ -110,9 +126,8 @@ namespace IngameScript.InventoryManager.MiningShip
         /// <summary>
         /// We can only draw a max of 10 lines currently
         /// </summary>
-        public void Draw(string displayName, IEnumerable<ItemInformation> items, CapacityInformation capacityInformation, bool useOreRatios = false)
+        public void Draw(IMyTextSurface display, IEnumerable<ItemInformation> items, CapacityInformation capacityInformation, bool useOreRatios = false)
         {
-            var display = GridTerminalSystem.GetBlockWithName(displayName) as IMyTextPanel;
             var builder = new StringBuilder();
             display.Font = "Monospace";
             display.FontSize = 1f;
