@@ -1,4 +1,5 @@
 ﻿using Sandbox.ModAPI.Ingame;
+using VRage.Game.ModAPI.Ingame.Utilities;
 using VRageMath;
 
 namespace IngameScript.HangerDoors
@@ -16,24 +17,37 @@ namespace IngameScript.HangerDoors
         private int DELAY_BETWEEN_BLINKS_MAX_COUNT = (SECONDS_TO_WAIT * TICKS_PER_SECOND) / UPDATE_TICK_FREQUENCY;
         private int _blinkDelayCount = 0;
         private Color InternalWhite = new Color(255, 240, 230);
+
+        private IMyBlockGroup portHangarDoorGroup;
+        private IMyMotorStator portBayDoorRotor;
+        private List<IMyAirtightHangarDoor> portDoors;
         
+        private IMyBlockGroup starboardHangarDoorGroup;
+        private IMyMotorStator starboardBayDoorRotor;
+        private List<IMyAirtightHangarDoor> starboardDoors;
         public Program()
         {
-            Runtime.UpdateFrequency = UpdateFrequency.Once | UpdateFrequency.Update10;
+            Runtime.UpdateFrequency = UpdateFrequency.Once | UpdateFrequency.Update10 | UpdateFrequency.Update100;
+            var ini = new MyIni();
+            ini.TryParse(Me.CustomData);
+            
+            portHangarDoorGroup = GridTerminalSystem.GetBlockGroupWithName("Port Hangar Door");
+            portBayDoorRotor = GridTerminalSystem.GetBlockWithName("Port Bay Door Rotor") as IMyMotorStator;
+            portDoors = new List<IMyAirtightHangarDoor>();
+            
+            starboardHangarDoorGroup = GridTerminalSystem.GetBlockGroupWithName("Starboard Hangar Door");
+            starboardBayDoorRotor = GridTerminalSystem.GetBlockWithName("Starboard Bay Door Rotor") as IMyMotorStator;
+            starboardDoors = new List<IMyAirtightHangarDoor>();
         }
 
         public void Main(string argument, UpdateType updateSource)
         {
             if (updateSource == UpdateType.Trigger)
             {
-                var portHangarDoorGroup = GridTerminalSystem.GetBlockGroupWithName("Port Hangar Door");
-                var portBayDoorRotor = GridTerminalSystem.GetBlockWithName("Port Bay Door Rotor") as IMyMotorStator;
-                List<IMyAirtightHangarDoor> portDoors = new List<IMyAirtightHangarDoor>();
-            
-                var starboardHangarDoorGroup = GridTerminalSystem.GetBlockGroupWithName("Starboard Hangar Door");
-                var starboardBayDoorRotor = GridTerminalSystem.GetBlockWithName("Starboard Bay Door Rotor") as IMyMotorStator;
-                List<IMyAirtightHangarDoor> starboardDoors = new List<IMyAirtightHangarDoor>();
-            
+                Echo("Unlocking Rotors");
+                portBayDoorRotor.RotorLock = false;
+                starboardBayDoorRotor.RotorLock = false;
+                
                 if (portHangarDoorGroup != null && portDoors != null)
                 {
                     portHangarDoorGroup.GetBlocksOfType(portDoors);
@@ -48,10 +62,33 @@ namespace IngameScript.HangerDoors
             else if (updateSource == UpdateType.Update10)
             {
                 BlinkLights();
+            }
+            else if (updateSource == UpdateType.Update100)
+            {
                 if (_opening == false)
                 {
-                    
+                    CheckIsClosed(starboardBayDoorRotor, portBayDoorRotor);
                 }
+            }
+        }
+
+        public void CheckIsClosed(IMyMotorStator starboardBayRotor, IMyMotorStator portBayRotor)
+        {
+            var starboardAngleDeg = (int)Math.Round(Math.Abs(starboardBayRotor.Angle * (180 / Math.PI)));
+            var portAngleDeg = (int)Math.Round(Math.Abs(portBayRotor.Angle * (180 / Math.PI)));
+            Echo($"sa:{starboardAngleDeg}, pa: {portAngleDeg}");
+            if (starboardAngleDeg == 0 || starboardAngleDeg == 90)
+            {
+                starboardBayRotor.TargetVelocityRPM = 0;
+                starboardBayRotor.RotorLock = true;
+                Echo("Locking Starboard");
+            }
+
+            if (portAngleDeg == 0 || portAngleDeg == 90)
+            {
+                portBayRotor.TargetVelocityRPM = 0;
+                portBayRotor.RotorLock = true;
+                Echo("Locking Port");
             }
         }
 
@@ -108,9 +145,10 @@ namespace IngameScript.HangerDoors
             var side = args[0]; // starboard, port
             var action = args[1]; // open, close
             var hanger = args[2]; // top, bottom
-            var portVelocityOpen = 1f;
-            var starboardVelocityOpen = -1f;
+            var portVelocityOpen = 5f;
+            var starboardVelocityOpen = -5f;
             var velocity = 0f;
+            
 
             List<IMyAirtightHangarDoor> doorsToAffect = new List<IMyAirtightHangarDoor>();
             IMyMotorStator rotorToAffect = null;
