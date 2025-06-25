@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "dgSpecHash": "zmtgkYYuVHFcM0kgHH5sdficIIRqxi7qYyovPPMe33L0tA4m2MIt+T1IbGK2XvGoRFmIh8eeLqo6nQCvTIEBNQ==",
+  "success": true,
+  "projectFilePath": "D:\\workspaces\\space-engineers\\SpaceEngineers\\SpaceEngineers.Scripts\\SpaceEngineers.Scripts.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Kayde\\.nuget\\packages\\mal.mdk2.pbanalyzers\\2.1.8\\mal.mdk2.pbanalyzers.2.1.8.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\mal.mdk2.pbpackager\\2.0.1\\mal.mdk2.pbpackager.2.0.1.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\mal.mdk2.references\\2.2.2\\mal.mdk2.references.2.2.2.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.build.framework\\17.10.4\\microsoft.build.framework.17.10.4.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.build.utilities.core\\17.10.4\\microsoft.build.utilities.core.17.10.4.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.io.redist\\6.0.0\\microsoft.io.redist.6.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\microsoft.net.stringtools\\17.10.4\\microsoft.net.stringtools.17.10.4.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.collections.immutable\\8.0.0\\system.collections.immutable.8.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.configuration.configurationmanager\\8.0.0\\system.configuration.configurationmanager.8.0.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Users\\Kayde\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
